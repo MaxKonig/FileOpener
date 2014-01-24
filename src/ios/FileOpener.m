@@ -30,15 +30,19 @@
 
     CDVViewController* cont = (CDVViewController*)[ super viewController ];
 
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake((cont.view.frame.size.width/2) - 40, (cont.view.frame.size.height/2) - 40, 80, 80)];
-    spinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
-    spinner.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.85];
-    [spinner layer].cornerRadius = 8.0;
-    [spinner layer].masksToBounds = YES;
-    spinner.center = CGPointMake(cont.view.bounds.size.width / 2.0f, cont.view.bounds.size.height / 2.0f);
-    spinner.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin);
-    [spinner startAnimating];
-    [cont.view addSubview:spinner];
+    BOOL showSpinner = [path hasPrefix:@"http"];
+    UIActivityIndicatorView *spinner;
+    if (showSpinner) {
+        spinner = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake((cont.view.frame.size.width/2) - 40, (cont.view.frame.size.height/2) - 40, 80, 80)];
+        spinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
+        spinner.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.85];
+        [spinner layer].cornerRadius = 8.0;
+        [spinner layer].masksToBounds = YES;
+        spinner.center = CGPointMake(cont.view.bounds.size.width / 2.0f, cont.view.bounds.size.height / 2.0f);
+        spinner.autoresizingMask = (UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleTopMargin);
+        [spinner startAnimating];
+        [cont.view addSubview:spinner];
+    }
 
     NSArray *dotParts = [path componentsSeparatedByString:@"."];
     NSString *fileExt = [dotParts lastObject];
@@ -63,8 +67,10 @@
         NSLog(@"Resource file '%@' has been written to the Documents directory '%@' from online", previewDocumentFileName, localFile);
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            //remove the spinner on the background when done
-            [spinner removeFromSuperview];
+            if (showSpinner) {
+                //remove the spinner on the background when done
+                [spinner removeFromSuperview];
+            }
 
             // Get file again from Documents directory
             NSURL *fileURL = [NSURL fileURLWithPath:localFile];
