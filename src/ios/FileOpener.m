@@ -64,7 +64,7 @@
         if (!documentsDirectory) {NSLog(@"Documents directory not found!");}
         localFile = [documentsDirectory stringByAppendingPathComponent:previewDocumentFileName];
         [fileRemote writeToFile:localFile atomically:YES];
-        NSLog(@"Resource file '%@' has been written to the Documents directory '%@' from online", previewDocumentFileName, localFile);
+        NSLog(@"Resource file '%@' has been written to the Documents directory '%@'", previewDocumentFileName, localFile);
 
         dispatch_async(dispatch_get_main_queue(), ^{
             if (showSpinner) {
