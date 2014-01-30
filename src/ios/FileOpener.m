@@ -97,8 +97,8 @@
     });
 }
 
-- (void) documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller {
-    //NSLog(@"documentInteractionControllerDidDismissOpenInMenu");
+- (void) documentInteractionControllerDidDismissOptionsMenu:(UIDocumentInteractionController *)controller {
+    //NSLog(@"documentInteractionControllerDidDismissOptionsMenu");
 
     [self cleanupTempFile:controller];
 }
