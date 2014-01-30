@@ -30,9 +30,9 @@
 
     CDVViewController* cont = (CDVViewController*)[ super viewController ];
 
-    BOOL showSpinner = [path hasPrefix:@"http"];
+    BOOL isRemoteFileURL = [path hasPrefix:@"http"];
     UIActivityIndicatorView *spinner;
-    if (showSpinner) {
+    if (isRemoteFileURL) {
         spinner = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake((cont.view.frame.size.width/2) - 40, (cont.view.frame.size.height/2) - 40, 80, 80)];
         spinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
         spinner.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:.85];
@@ -51,29 +51,34 @@
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         //NSLog(@"path %@, uti:%@", path, uti);
+        NSURL *fileURL = nil;
+        
+        if (isRemoteFileURL) {
+            NSArray *parts = [path componentsSeparatedByString:@"/"];
+            NSString *previewDocumentFileName = [parts lastObject];
+            //NSLog(@"The file name is %@", previewDocumentFileName);
 
-        NSArray *parts = [path componentsSeparatedByString:@"/"];
-        NSString *previewDocumentFileName = [parts lastObject];
-        //NSLog(@"The file name is %@", previewDocumentFileName);
+            NSData *fileRemote = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:path]];
 
-        NSData *fileRemote = [[NSData alloc] initWithContentsOfURL:[NSURL URLWithString:path]];
-
-        // Write file to the Documents directory
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        if (!documentsDirectory) {NSLog(@"Documents directory not found!");}
-        localFile = [documentsDirectory stringByAppendingPathComponent:previewDocumentFileName];
-        [fileRemote writeToFile:localFile atomically:YES];
-        NSLog(@"Resource file '%@' has been written to the Documents directory '%@'", previewDocumentFileName, localFile);
+            // Write file to the Documents directory
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *documentsDirectory = [paths objectAtIndex:0];
+            if (!documentsDirectory) {NSLog(@"Documents directory not found!");}
+            localFile = [documentsDirectory stringByAppendingPathComponent:previewDocumentFileName];
+            [fileRemote writeToFile:localFile atomically:YES];
+            NSLog(@"Resource file '%@' has been written to the Documents directory '%@' from online", previewDocumentFileName, localFile);
+            
+            fileURL = [NSURL fileURLWithPath:localFile];
+        } else {
+            fileURL = [NSURL URLWithString:path];
+            localFile = fileURL.path; //ensure that the local file is removed in cleanupTempFile - hacky :(
+        }
 
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (showSpinner) {
+            if (isRemoteFileURL) {
                 //remove the spinner on the background when done
                 [spinner removeFromSuperview];
             }
-
-            // Get file again from Documents directory
-            NSURL *fileURL = [NSURL fileURLWithPath:localFile];
 
             docController = [UIDocumentInteractionController  interactionControllerWithURL:fileURL];
             docController.delegate = self;
