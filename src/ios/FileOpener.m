@@ -87,7 +87,11 @@
             //CGRect rect = CGRectMake(0, 0, 1500.0f, 50.0f);
             CGRect rect = CGRectMake(0, 0, 1000.0f, 150.0f);
             CDVPluginResult* pluginResult = nil;
-            BOOL wasOpened = [docController presentOptionsMenuFromRect:rect inView:cont.view animated:YES];
+            BOOL wasOpened = [docController presentOpenInMenuFromRect:rect inView:cont.view animated:YES];
+
+            if(!wasOpened) {
+                wasOpened = [docController presentOptionsMenuFromRect:rect inView:cont.view animated:YES];
+            }
 
             if(wasOpened) {
                 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @""];
