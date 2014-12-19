@@ -11,6 +11,7 @@ package com.phonegap.plugins.fileopener;
 import java.io.IOException;
 import java.net.URLConnection;
 
+import android.content.ActivityNotFoundException;
 import org.apache.cordova.CallbackContext;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -109,7 +110,12 @@ public class FileOpener extends CordovaPlugin {
             intent.setDataAndType(uri, mimeType);
         }
 
-        this.cordova.getActivity().startActivity(intent); // TODO handle ActivityNotFoundException
+        Intent intentChooser = Intent.createChooser(intent, "Open File");
+        try {
+            this.cordova.getActivity().startActivity(intentChooser);
+        } catch (ActivityNotFoundException e) {
+
+        }
     }
 
 }
