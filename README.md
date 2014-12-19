@@ -5,7 +5,7 @@ Simple plugin which allows you to open popular files (PDF, WORD, EXCEL, JPG, GIF
 
 Adding the Plugin to your project
 -----------
-    $ cordova plugin add https://github.com/don/FileOpener.git
+    $ cordova plugin add https://github.com/rafelbev/FileOpener.git
 
 Using the plugin
 ===========
@@ -25,6 +25,9 @@ After you run the command above, Android device will either open the file with p
 
 RELEASE NOTES
 -------------
+Dec 19, 2014
+Merge Cordova-3.0 into master
+
 Aug 1, 2013
 Update for Cordova-3.0
 
