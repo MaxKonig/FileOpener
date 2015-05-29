@@ -6,7 +6,7 @@
  * Copyright (c) 2011, IBM Corporation
  */
 
-package com.phonegap.plugins.fileopener;
+package com.cordova.plugins.fileopener;
 
 import java.io.IOException;
 import java.net.URLConnection;
