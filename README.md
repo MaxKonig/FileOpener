@@ -5,7 +5,7 @@ Simple plugin which allows you to open popular files (PDF, WORD, EXCEL, JPG, GIF
 
 Adding the Plugin to your project
 -----------
-    $ cordova plugin add https://github.com/rafelbev/FileOpener.git
+    $ cordova plugin add com.cordova.plugins.fileopener
 
 Using the plugin
 ===========
